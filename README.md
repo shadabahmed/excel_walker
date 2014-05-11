@@ -1,4 +1,4 @@
-# ExcelWalker
+# ExcelWalker [![Gem Version](https://badge.fury.io/rb/excel_walker.png)](http://badge.fury.io/rb/excel_walker) [![Build Status](https://secure.travis-ci.org/shadabahmed/excel_walker.png)](https://secure.travis-ci.org/shadabahmed/excel_walker)
 
 Excel Walker is a declarative Microsoft Excel file parser and generator. It uses [Axlsx](https://github.com/randym/axlsx) to write and [Creek](https://github.com/pythonicrubyist/creek) to read.
 
