@@ -14,7 +14,7 @@ What if you could just declare this - Start from row 3 and just give me 1st, 2nd
 
 ````ruby
 
-sheet.on_rows(3..60).pluck_columns([1, 2, 4]).run do |country, currency_code, exchange_rate|
+sheet.on_rows(3..60).pluck_columns([1, 2, 4]).run do |(country, currency_code, exchange_rate)|
   Currency.create(country: country, code: currency_code, rate: exchange_rate)
 end
 
