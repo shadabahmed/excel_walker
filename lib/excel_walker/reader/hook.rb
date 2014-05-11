@@ -4,28 +4,32 @@ module ExcelWalker
     class Hook
       def initialize(condition)
         @matcher = case true
-                     when condition.respond_to?(:call)
+                     when condition.is_a?(Proc)
                        condition
                      when condition.is_a?(Array), condition.is_a?(Range)
                        proc { |row_num| condition.include?(row_num) }
                      when condition.is_a?(Fixnum)
                        proc { |row_num| condition === row_num }
+                     else
+                       raise ArgumentError.new('Can only take Array, Number, Range or a Block')
                    end
       end
 
-      def columns(cols_condition = nil, &block)
-        cols_condition = block if block_given?
+      def columns(cols_matcher = nil, &block)
+        cols_matcher = block if block_given?
         @cols_extractor =
-            case cols_condition.class.name
-              when 'Array'
-                cols_set = Set.new(cols_condition)
-                proc { |row| row.values.select.with_index { |_, idx| cols_set.include?(idx + 1) } }
-              when 'Fixnum'
-                proc { |row| row.values[cols_condition - 1] }
-              when 'Range'
-                proc { |row| row.values[(cols_condition.min - 1)..(cols_condition.max - 1)] }
-              when 'Proc'
-                proc { |row| cols_condition[row.values] }
+            case true
+              when cols_matcher.is_a?(Array)
+                cols_set = Set.new(cols_matcher)
+                proc { |row| row.select.with_index { |_, idx| cols_set.include?(idx + 1) } }
+              when cols_matcher.is_a?(Fixnum)
+                proc { |row| row[cols_matcher - 1] }
+              when cols_matcher.is_a?(Range)
+                proc { |row| row[(cols_matcher.min - 1)..(cols_matcher.max - 1)] }
+              when cols_matcher.is_a?(Proc)
+                proc { |row| cols_matcher[row] }
+              else
+                raise ArgumentError.new('Can only take Array, Number, Range or a Block')
             end
         self
       end

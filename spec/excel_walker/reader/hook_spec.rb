@@ -2,22 +2,90 @@ require 'spec_helper'
 
 module ExcelWalker::Reader
   describe Hook do
-    let(:array_hook) { Hook.new([1,2,3]) }
-    let(:range_hook) { Hook.new(1..3) }
-    let(:num_hook) { Hook.new(2) }
-    let(:proc_hook) { Hook.new(proc{|x, y| x == y && y == 2}) }
+    subject(:hook) { Hook.new(proc { true }) }
+    it 'raises error on wrong initializaion' do
+      expect { Hook.new('string') }.to raise_error(ArgumentError, 'Can only take Array, Number, Range or a Block')
+    end
 
     describe '#match?' do
-      it 'matches the hook with the condition' do
-        expect(array_hook.match?(2)).to be_true
-        expect(array_hook.match?(0)).to be_false
-        expect(range_hook.match?(2)).to be_true
-        expect(range_hook.match?(0)).to be_false
-        expect(num_hook.match?(2)).to be_true
-        expect(num_hook.match?(3)).to be_false
-        expect(proc_hook.match?(2, 2)).to be_true
-        expect(proc_hook.match?(3, 3)).to be_false
+      context 'array condition for rows' do
+        subject(:hook) { Hook.new([1, 2, 3]) }
+        it 'gives correct output on match' do
+          expect(hook.match?(2)).to be_true
+          expect(hook.match?(0)).to be_false
+        end
+      end
+
+      context 'range condition for rows' do
+        subject(:hook) { Hook.new(1..3) }
+        it 'gives correct output on match' do
+          expect(hook.match?(2)).to be_true
+          expect(hook.match?(0)).to be_false
+        end
+      end
+
+      context 'number condition for rows' do
+        subject(:hook) { Hook.new(2) }
+        it 'gives correct output on match' do
+          expect(hook.match?(2)).to be_true
+          expect(hook.match?(3)).to be_false
+        end
+      end
+
+      context 'proc condition for rows' do
+        subject(:hook) { Hook.new(proc { |x, y| x == y && y == 2 }) }
+        it 'gives correct output on match' do
+          expect(hook.match?(2, 2)).to be_true
+          expect(hook.match?(2, 3)).to be_false
+        end
       end
     end
+
+    describe '#run' do
+      let(:hook_lambda) { proc {} }
+      it 'assigns the block to run when hook is executed' do
+        hook.run(&hook_lambda)
+        expect(hook.instance_variable_get('@run_block')).to eq hook_lambda
+      end
+    end
+
+    describe '#call' do
+      let(:collection) { (1..100).to_a }
+      let(:hook_block) { double }
+      before { subject.run { |a, b, c, d| hook_block.call(a, b, c, d) } }
+
+      context 'array column numbers matcher' do
+        subject { hook.columns([1, 2, 4]) }
+        it 'sends correct data to the hooked block' do
+          hook_block.should_receive(:call).with([1, 2, 4], 'b', 'c', 'd')
+          subject.call(collection, 'b', 'c', 'd')
+        end
+      end
+
+      context 'range column numbers matcher' do
+        subject { hook.columns(6..9) }
+        it 'sends correct data to the hooked block' do
+          hook_block.should_receive(:call).with([6, 7, 8, 9], 'b', 'c', 'd')
+          subject.call(collection, 'b', 'c', 'd')
+        end
+      end
+
+      context 'number column matcher' do
+        subject { hook.columns(11) }
+        it 'sends correct data to the hooked block' do
+          hook_block.should_receive(:call).with(11, 'b', 'c', 'd')
+          subject.call(collection, 'b', 'c', 'd')
+        end
+      end
+
+      context 'number column matcher' do
+        subject { hook.columns {|row| row[96] }  }
+        it 'sends correct data to the hooked block' do
+          hook_block.should_receive(:call).with(97, 'b', 'c', 'd')
+          subject.call(collection, 'b', 'c', 'd')
+        end
+      end
+    end
+
   end
 end

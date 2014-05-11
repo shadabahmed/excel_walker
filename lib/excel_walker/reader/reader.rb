@@ -67,7 +67,7 @@ module ExcelWalker
           row_num += 1
           break if @max_rows[sheet_num] && row_num > @max_rows[sheet_num]
           @hooks[sheet_num].each do |hook|
-            hook.call(row, row_num, sheet, sheet_num) if hook.match?(row_num, sheet_num)
+            hook.call(row.values, row_num, sheet, sheet_num) if hook.match?(row_num, sheet_num)
           end
         end
       end
