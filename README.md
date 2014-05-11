@@ -8,7 +8,7 @@ While dealing with Excel files recently, I noticed that excel files are never a 
 
 ![currency_excel](https://cloud.githubusercontent.com/assets/830679/2937625/d333658e-d8bf-11e3-9619-658e20c425a0.png)
 
-We are not interested in the top header, we just want the country, currency and USD exchange rate so that we can store that in our database in currencies table. The regions are marked in RED. If you were to go interatively over each row, then lot of custom logic would have to fit in.
+We are not interested in the top header, we just want the country, currency and USD exchange rate so that we can store that in our database in currencies table. The regions are marked in RED. If you were to go iteratively over each row, then lot of custom logic would have to fit in.
 
 What if you could just declare this - Start from row 3 and just give me 1st, 2nd and 4th column. Let's see this in code:
 
