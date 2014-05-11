@@ -36,7 +36,7 @@ module ExcelWalker
         @run_block = block
       end
 
-      def match?(row_num, sheet_num)
+      def match?(row_num, sheet_num = nil)
         @matcher[row_num, sheet_num]
       end
 

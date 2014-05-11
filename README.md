@@ -4,7 +4,7 @@ Excel Walker is a declarative Microsoft Excel file parser and generator. It uses
 
 # Why I created this ?
 
-While dealing with Excel files recently, I noticed that excel files are never a set of homogenous data, which you can iterate over directly. Rather there are regions of interest whether in the same worksheet or across worksheets, which have different types of data you are interested in. For e.g. look at the spreadsheet below:
+While dealing with Excel files recently, I noticed that excel files are never a set of homogenous data, which you can iterate over directly. Rather there are regions of interest whether in the same worksheet or across worksheets, which you want to work upon differently. For e.g. look at the spreadsheet below:
 
 ![currency_excel](https://cloud.githubusercontent.com/assets/830679/2937625/d333658e-d8bf-11e3-9619-658e20c425a0.png)
 
