@@ -14,7 +14,7 @@ module ExcelWalker
                        @max = condition
                        proc { |row_num| condition === row_num }
                      else
-                       raise ArgumentException.new('Can only take Range, Integers or Arrays here')
+                       raise ArgumentError.new('Can only take Range, Integers or Arrays')
                    end
         @row_index = 0
       end

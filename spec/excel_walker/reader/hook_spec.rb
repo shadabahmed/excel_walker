@@ -78,7 +78,7 @@ module ExcelWalker::Reader
         end
       end
 
-      context 'number column matcher' do
+      context 'proc column matcher' do
         subject { hook.columns {|row| row[96] }  }
         it 'sends correct data to the hooked block' do
           hook_block.should_receive(:call).with(97, 'b', 'c', 'd')
