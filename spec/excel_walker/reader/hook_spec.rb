@@ -49,6 +49,12 @@ module ExcelWalker::Reader
       end
     end
 
+    describe '#columns' do
+      it 'only takes array, number, proc or range as input' do
+        expect{ Hook.new(1).columns('string') }.to raise_error(ArgumentError, 'Can only take Array, Number, Range or a Block')
+      end
+    end
+
     describe '#call' do
       let(:collection) { (1..100).to_a }
       let(:hook_block) { double }
