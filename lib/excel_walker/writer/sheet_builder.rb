@@ -11,7 +11,7 @@ module ExcelWalker
 
       delegate :add_style, to: '@workbook.styles'
       delegate :pane, to: '@sheet.sheet_view'
-      delegate :column_width, to: '@sheet'
+      delegate :column_widths, to: '@sheet'
 
       def create_pane(x , y)
         @sheet.sheet_view.pane do |pane|
