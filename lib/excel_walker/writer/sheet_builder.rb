@@ -1,6 +1,8 @@
 module ExcelWalker
   module Writer
     class SheetBuilder
+      attr_reader :sheet
+
       def initialize(workbook, name)
         @workbook = workbook
         @name = name
