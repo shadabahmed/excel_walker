@@ -20,14 +20,17 @@ module ExcelWalker
         @cols_extractor =
             case true
               when cols_matcher.is_a?(Array)
-                cols_set = Set.new(cols_matcher)
-                proc { |row| row.select.with_index { |_, idx| cols_set.include?(idx + 1) } }
+                proc { |row| cols_matcher.collect{|idx| row[idx - 1]} }
               when cols_matcher.is_a?(Fixnum)
                 proc { |row| row[cols_matcher - 1] }
               when cols_matcher.is_a?(Range)
                 proc { |row| row[(cols_matcher.min - 1)..(cols_matcher.max - 1)] }
               when cols_matcher.is_a?(Proc)
                 proc { |row| cols_matcher[row] }
+              when cols_matcher.is_a?(Hash)
+                cols_idxs = cols_matcher.values
+                cols_names = cols_matcher.keys
+                proc { |row| Hash[cols_names.zip(cols_idxs.collect{|idx| row[idx - 1]})] }
               else
                 raise ArgumentError.new('Can only take Array, Number, Range or a Block')
             end

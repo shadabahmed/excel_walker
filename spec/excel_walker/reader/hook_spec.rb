@@ -91,6 +91,14 @@ module ExcelWalker::Reader
           subject.call(collection, 'b', 'c', 'd')
         end
       end
+
+      context 'hash column matcher' do
+        subject { hook.columns(first: 1, second: 2, twentieth: 20, last: 100) }
+        it 'sends correct data to the hooked block' do
+          hook_block.should_receive(:call).with({first: 1, second: 2, twentieth: 20, last: 100}, 'b', 'c', 'd')
+          subject.call(collection, 'b', 'c', 'd')
+        end
+      end
     end
 
   end
