@@ -32,6 +32,12 @@ module ExcelWalker
 
       alias on_rows on_row
 
+      def from_row(n)
+        on_row do |row_num|
+          row_num >= n
+        end
+      end
+
       def hooks
         @hooks[@current_sheet]
       end

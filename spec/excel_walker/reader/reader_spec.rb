@@ -30,9 +30,12 @@ module ExcelWalker::Reader
     context 'one worksheet - block syntax for row matchers and columns plucker' do
       before do
         exl.on_row { |row_num| row_num == 5 }.columns { |row| row[9] }.run { |data, row_num| hook1.call(data, row_num) }
+        exl.from_row(99).columns { |row| row[9] }.run { |data, row_num| hook1.call(data, row_num) }
       end
       it 'calls the hooks correctly' do
         hook1.should_receive(:call).with('k', 5)
+        hook1.should_receive(:call).with('k', 99)
+        hook1.should_receive(:call).with('k', 100)
         expect(exl.start).to eq ['sheet1']
       end
     end
